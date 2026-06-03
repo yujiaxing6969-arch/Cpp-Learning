@@ -1,0 +1,7 @@
+*.o
+*.out
+*.exe
+stu
+student
+student1
+build/
