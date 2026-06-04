@@ -1,7 +1,13 @@
-*.o
+# 编译产物
+**/stu
+**/stu1
+**/[0-9]
+
+# Linux可执行文件
 *.out
-*.exe
-stu
-student
-student1
-build/
+
+# VSCode
+.vscode/
+
+# 临时文件
+*.o
