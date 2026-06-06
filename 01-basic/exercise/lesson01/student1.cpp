@@ -3,76 +3,100 @@
 #include <utility>
 class Student{
 private:
-    char *name;
-public:
-    Student(const char* newname = "Tom"){
-        name = new char[strlen(newname) +1];
-        strcpy(name,newname);
-        std::cout << "普通构造函数\n";
-    }
-    Student(const Student &other){
-        name = new char[strlen(other.name) + 1];
-        strcpy(name, other.name);
-        std::cout << "拷贝构造函数\n";
-    }
-    // Student(const Student& other):name(other.name){
-    //     std::cout << "浅拷贝构造\n";
-    // }
+    char * name;
 
-    Student & operator=(const Student &other){
+public:
+    Student(const char * newName){
+        name = new char[strlen(newName) + 1];
+        strcpy(name,newName);
+        std::cout << "普通构造\n";
+    }
+
+    Student(const Student &other){
+        if(other.name == nullptr){
+            name = nullptr;
+        }
+        else{
+            name = new char[strlen(other.name)+1];
+            strcpy(name,other.name);
+        }
+        std::cout<<"拷贝构造\n";
+        
+    }
+
+    Student & operator=(const  Student &other){
+        if(this == &other){
+            return *this;
+        }
+        if(other.name == nullptr){
+            delete[] name;
+            name = nullptr;
+            return *this;
+        }
+        
+        char *newName = new char[strlen(other.name)+1];
+        strcpy(newName, other.name);
+        delete[] name;
+        name = newName;
+        std::cout <<"拷贝赋值\n";
+        return *this;
+    }
+
+
+    Student( Student&& other) noexcept{
+        name = other.name;
+        other.name = nullptr;
+        std::cout <<"移动构造\n";
+        
+    }
+
+    Student & operator= ( Student&& other) noexcept{
         if(this == &other){
             return *this;
         }
         delete[] name;
-        name = new char[strlen(other.name) + 1];
-        strcpy(name, other.name);
+        name = other.name;
+        other.name = nullptr;
+        std::cout << "移动赋值\n";
         return *this;
     }
+
     ~Student(){
         delete[] name;
-        std::cout <<"析构函数\n";
+        std::cout <<"析构\n";
+    }
+
+    void print() const{
+        if(name == nullptr){
+            std::cout<< "Name: nullptr\n";
+        }else{
+            std::cout<< "Name: "<<name<<std::endl;
+        }
     }
     void setName(const char *newName){
         delete[] name;
-        name = new char[strlen(newName) + 1];
+        name = new char[strlen(newName)+1];
         strcpy(name, newName);
     }
-    void print() const{
-        if(name == nullptr){
-            std::cout<<"Name: nullptr\n";
-            return;
-        }
-        std::cout << "Name: "<<name <<std::endl;
-    }
-    Student(Student &&other){
-        name = other.name;
-        other.name = nullptr;
-        std::cout <<"移动构造函数\n";
-    }
-    Student& operator=(Student && other){
-        if(this == &other){
-            return *this;
-        }
-
-        delete[] name;
-        name = other.name;
-        other.name = nullptr;
-        std::cout<<"移动赋值\n";
-        return *this;
-    }
 };
-Student createStudent(){
-        Student temp("Tom");
-        return temp;
-    }
+
+Student createStudent() {
+    Student temp("Alice");
+    return temp;
+}
 int main(){
-    Student s1("Tom");
-    Student s2("Jerry");
 
-    s2 = std::move(s1);
+    Student a("Tom");
+    Student b = std::move(a);
 
-    s2.print();
-    s1.print();
+    Student c("Jerry");
+    c = a;
 
+    Student d = a;
+
+    a.print();
+    b.print();
+    c.print();
+    d.print();
     return 0;
 }

@@ -1,13 +1,17 @@
+# build目录
+build/
+
 # 编译产物
 **/stu
 **/stu1
 **/[0-9]
 
-# Linux可执行文件
-*.out
-
-# VSCode
+# vscode
 .vscode/
 
-# 临时文件
+# object
 *.o
+
+# executable
+*.out
+student1
